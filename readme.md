@@ -28,4 +28,3 @@ Wir wollen eine Banking-App programmieren, die sich an die N26 anlehnt.
 * Textfeld für Benutzername
 * Textfeld für das Kennwort
 * Button zum Klicken
-
