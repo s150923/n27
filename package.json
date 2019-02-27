@@ -1,0 +1,24 @@
+{
+  "name": "n27",
+  "version": "1.0.0",
+  "description": "Wir wollen eine Banking-App programmieren, die sich an die N26 anlehnt.",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "nodemon": "^1.18.10"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://s150923@bitbucket.org/s150923/n27.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/s150923/n27#readme"
+}
