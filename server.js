@@ -35,6 +35,24 @@ const app = express()
     })
 })
 
+app.post('/',(req, res, next) => {
 
+    const idKunde = req.body.idKunde
+    const kennwort = req.body.kennwort
 
+    if(idKunde === "4711" && kennwort === "123"){
+        console.log("Der Cookie wird gesetzt")
+        res.cookie('istAngemeldetAls','idKunde')
+        res.render('index.ejs', {  
+        })
+    }else{
+        console.log("Der Cookie wird gelöscht")
+        res.cookie('istAngemeldetAls','')
+        res.render('login.ejs', {  
+        })
+    }
+
+   res.render('login.ejs', {  
+   })
+})
  
