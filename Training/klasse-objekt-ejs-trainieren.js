@@ -45,6 +45,14 @@ class Spieler {
     }
 }
 
+class Mercedes { 
+    constructor(){
+        this.automodell
+        this.preis
+        this.reifen
+    }
+}
+
 // Deklaration eines Rechteck-Objekts vom Typ Rechteck
 // Deklaration = Bekanntmachung, dass es ein Objekt 
 
@@ -79,6 +87,10 @@ spieler.trikotnummer = 9
 spieler.verein = "AS Rom"
 spieler.position = "Stuermer"
 spieler.nationalitaet = "Bosnien"
+
+let mercedes = new Mercedes()
+mercedes.automodell = 
+
 
 
 
