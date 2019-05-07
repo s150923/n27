@@ -88,11 +88,6 @@ spieler.verein = "AS Rom"
 spieler.position = "Stuermer"
 spieler.nationalitaet = "Bosnien"
 
-let mercedes = new Mercedes()
-mercedes.automodell = 
-
-
-
 
 
 app.get('/klasse-objekt-ejs-trainieren',(req, res, next) => {   
