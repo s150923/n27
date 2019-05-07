@@ -89,7 +89,6 @@ spieler.position = "Stuermer"
 spieler.nationalitaet = "Bosnien"
 
 
-
 app.get('/klasse-objekt-ejs-trainieren',(req, res, next) => {   
 
     // ... wird klasse-objekt-ejs-trainieren.ejs gerendert:

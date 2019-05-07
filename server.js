@@ -109,3 +109,10 @@ app.post('/kontoAnlegen',(req, res, next) => {
     }
 })
 
+
+class auto{
+    constructor(){
+        this.kontonummer
+        this.kontoart
+    }
+}   
