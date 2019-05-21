@@ -7,18 +7,24 @@ class Konto{
 
 class Kunde{
     constructor(){
+        this.Mail
         this.Name
         this.Kennwort
-        this.Mail
-        this.IdKunde      
+        this.IdKunde 
+        this.Geburtsdatum
+        this.Adresse
+        this.Telefon     
     }
 }
 
 let kunde = new Kunde()
 kunde.Mail = "zuki@gmail.com"
 kunde.Name = "Zuki"
-kunde.Kennwort = "12"
+kunde.Kennwort = "123"
 kunde.IdKunde = "4711"
+kunde.Geburtsdatum = "13.10"
+kunde.Adresse = "Alkohol Str 2"
+kunde.Telefon = "1234579"
 
 
 
@@ -132,3 +138,40 @@ class auto{
         this.kontoart
     }
 }   
+
+
+app.get('/profilBearbeiten',(req, res, next) => {   
+
+    let idKunde = req.cookies['istAngemeldetAls']
+    
+    if(idKunde){
+        console.log("Kunde ist angemeldet als " + idKunde)
+        res.render('profilBearbeiten.ejs', {   
+            meldung : ""                     
+        })
+    }else{
+        res.render('login.ejs', {                    
+        })    
+    }
+})
+app.post('/profilBearbeiten',(req, res, next) => {   
+
+    let idKunde = req.cookies['istAngemeldetAls']
+    
+    if(idKunde){
+            kunde.Mail = req.body.mail
+            kunde.Name = req.body.name
+            kunde.Kennwort = req.body.kennwort
+            kunde.IdKunde = req.body.idKunde
+            kunde.Geburtsdatum = req.body.geburtsdatum
+            kunde.Adresse = req.body.adresse
+            kunde.Telefon = req.body.telefon
+        console.log("Kunde ist angemeldet als " + idKunde)
+        res.render('profilBearbeiten.ejs', {    
+            meldung : "Das Profil wurde bearbeitet: <br>Mail: " + kunde.Mail + "<br>Kennwort: " + kunde.Kennwort + "<br>Adresse: " + kunde.Adresse + "<br>Telefon: " + kunde.Telefon                         
+        })
+    }else{
+        res.render('login.ejs', {                    
+        })    
+    }
+})
