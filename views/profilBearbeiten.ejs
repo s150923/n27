@@ -24,20 +24,14 @@
   </nav>
     
     <form method="POST" action="/profilbearbeiten"> 
+        <label>Telefonnummer:</label>
+        <input type="number" name="telefonnummer">  
         <label>Mail:</label>
         <input type="text" name="mail">         
-        <label>Name:</label>          
-        <input type="text" name="vorname"> 
         <label>Kennwort:</label>          
-        <input type="number" name="passwort">     
-        <label>IdKunde:</label>
-        <input type="number" name="idKunde">
-        <label>Geburtsdatun:</label>
-        <input type="number" name="geburtsdatum">
+        <input type="number" name="kennwort">     
         <label>Adresse:</label>
         <input type="text" name="adresse">
-        <label>Telefon</label>
-        <input type="number" name="telefon">
         <button>Profil Bearbeiten</button>
     </form>  
     <%= meldung %>

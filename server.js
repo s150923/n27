@@ -11,7 +11,7 @@ class Konto{
 class Kunde{
     constructor(){
         this.Mail
-        this.Name
+        this.Nachname
         this.Kennwort
         this.IdKunde 
         this.Geburtsdatum
@@ -39,6 +39,7 @@ kunde.Telefon = "1234579"
 const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+const iban = require('iban')
 const app = express()
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
@@ -147,6 +148,10 @@ app.post('/kontoAnlegen',(req, res, next) => {
         let konto = new Konto()
             konto.Kontonummer = req.body.kontonummer
             konto.Kontoart = req.body.kontoart
+            const bankleitzahl = "27000000"
+            const laendererkennung = "DE"
+            let errechneteIban = iban.fromBBAN(laenderkennung, bankleitzahl + " " + req.body.kontonummer)
+        console.log(errechneteIban)
         console.log("Kunde ist angemeldet als " + idKunde)
         res.render('kontoAnlegen.ejs', {    
             meldung : "Das Konto " + konto.Kontonummer + "wurde erfolgreich angelegt."                          
@@ -183,19 +188,61 @@ app.get('/profilBearbeiten',(req, res, next) => {
 app.post('/profilBearbeiten',(req, res, next) => {   
 
     let idKunde = req.cookies['istAngemeldetAls']
+
+  
     
     if(idKunde){
+        console.log("Kunde ist angemeldet als " + idKunde)
+
+            kunde.Telefonnummer = req.body.telefonnummer
             kunde.Mail = req.body.mail
-            kunde.Name = req.body.name
+            kunde.Nachname = "Sekic"
             kunde.Kennwort = req.body.kennwort
-            kunde.IdKunde = req.body.idKunde
-            kunde.Geburtsdatum = req.body.geburtsdatum
             kunde.Adresse = req.body.adresse
             kunde.Telefon = req.body.telefon
-        console.log("Kunde ist angemeldet als " + idKunde)
+        
         res.render('profilBearbeiten.ejs', {    
             meldung : "Das Profil wurde bearbeitet: <br>Mail: " + kunde.Mail + "<br>Kennwort: " + kunde.Kennwort + "<br>Adresse: " + kunde.Adresse + "<br>Telefon: " + kunde.Telefon                         
         })
+    }else{
+        res.render('login.ejs', {                    
+        })    
+    }
+})
+
+app.get('/ueberweisen',(req, res, next) => {   
+
+    let idKunde = req.cookies['istAngemeldetAls']
+    
+    if(idKunde){
+        console.log("Kunde ist angemeldet als " + idKunde)
+        res.render('ueberweisen.ejs', {   
+            meldung : ""                     
+        })
+    }else{
+        res.render('login.ejs', {                    
+        })    
+    }
+})
+
+app.post('/ueberweisen',(req, res, next) => {   
+
+    let idKunde = req.cookies['istAngemeldetAls']
+
+  
+    
+    if(idKunde){
+        console.log("Kunde ist angemeldet als " + idKunde)
+
+            kunde.Telefonnummer = req.body.telefonnummer
+            kunde.Mail = req.body.mail
+            kunde.Nachname = "Sekic"
+            kunde.Kennwort = req.body.kennwort
+            kunde.Adresse = req.body.adresse
+            kunde.Telefon = req.body.telefon
+        
+        res.render('ueberweisen.ejs', {    
+            meldung : "Die Überweisung wurde erfolgreich ausgeführt."
     }else{
         res.render('login.ejs', {                    
         })    
