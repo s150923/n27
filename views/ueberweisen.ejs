@@ -12,7 +12,7 @@
     <meta name="msapplication-TileColor" content="#ffc40d">
     <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Überweisung</title>
+    <title>N27 - Überweisung</title>
   </head>
   <body>    
     <h1>Überweisung</h1>  
@@ -21,17 +21,15 @@
       <a href="/login">Logout</a>        
       <a href="/impressum">Impressum</a>   
       <a href="mailto:stefan.baeumer@berufskolleg-borken.de"> <i class="fa fa-envelope-o"></i></a>
-      <a href="/profilBearbeiten"><i class="fa fa-user" aria-hidden="true"></i></a> 
-  </nav>
-    
+      <a href="/profilBearbeiten"><i class="fa fa-id-card-o" aria-hidden="true"></i></a>        
+    </nav>
     <form method="POST" action="/kontoAnlegen">          
         <label>Zielkontonummer:</label>          
-        <input type="number" name="zielkontonummer" type="text" minlength="10" maxlength="10" require> 
+        <input type="text" name="zielkontonummer" pattern="[0-9]{10}" title="Bitte exakt 10 Ziffern eingeben!">
         <label>Betrag:</label>          
-        <input type="text" name="betrag">          
-        <button>Überweisen</button>
+        <input type="number" name="betrag">          
+        <button>Konto anlegen</button>
     </form>  
     <%= meldung %>
-
   </body>
 </html>
