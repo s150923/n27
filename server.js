@@ -32,12 +32,22 @@ kunde.IdKunde = 4711
 const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+const mysql = require('mysql')
 const iban = require('iban')
 const app = express()
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieParser())
+
+const dbVerbindung = mysql.createConnection({
+    host: "10.40.38.110",
+    port: "3306",
+    db: "dbn27",
+    user: "placematman",
+    password: "BKB123456!"
+
+})
 
 const server = app.listen(process.env.PORT || 3000, () => {
     console.log('Server lauscht auf Port %s', server.address().port)    
@@ -229,7 +239,17 @@ app.post('/ueberweisen',(req, res, next) => {
     
     if(idKunde){
         console.log("Kunde ist angemeldet als " + idKunde)
-        
+
+        // Das Zielkonto und der Betrag wird aus dem Fortmular entgegengenommen.
+
+        let zielkontonummer = req.body.zielkontonummer
+        let betrag = req.body.betrag
+
+        // ToDO: Saldo um den Betrag reduzieren.
+        // ToDo: Betrag beim Zielkonto gutschreiben.
+
+        // Umsetzung mit einer gemeinsamen Datenbank.
+
         kunde.Telefonnummer = req.body.telefonnummer
         kunde.Mail = req.body.mail
         kunde.Adresse = req.body.adresse
