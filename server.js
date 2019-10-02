@@ -54,7 +54,7 @@ dbVerbindung.connect()
 
 dbVerbindung.connect(function(err){
 
-    dbVerbindung.query("CREATE TABLE IF NOT EXISTS konto(iban VARCHAR(22), kontoart VARCHAR(20), anfangssaldo FLOAT, timestamp TIMESTAMP, PRIMARY KEY (iban));",function(err, result){
+    dbVerbindung.query("CREATE TABLE IF NOT EXISTS konto(iban VARCHAR(22), kontoart VARCHAR(20), anfangssaldo DECIMAL (15,2), timestamp TIMESTAMP, PRIMARY KEY (iban));",function(err, result){
         if(err){
             console.log("Es ist ein Fehler aufgetreten:  " + err)
         }else{
@@ -181,7 +181,7 @@ app.post('/kontoAnlegen',(req, res, next) => {
         // Einfügen von Kontonummer in die Tabelle konto (SQL)
 
         dbVerbindung.connect(function(err){
-            dbVerbindung.query("INSERT INTO konto(iban anfangssaldo, kontoart, timestamp);", function(err, result){
+            dbVerbindung.query("INSERT INTO konto(iban anfangssaldo, kontoart, timestamp) VALUES ( 'DE1233', 2000, 'Sparkonto', 'NOW');", function(err, result){
                 if(err){
                     console.log("Es ist ein Fehler aufgetreten:  " + err)
                 }else{
