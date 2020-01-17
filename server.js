@@ -1,6 +1,6 @@
-// Klassendefinition: Die Klasse ist der Bauplan, der alle relevanten 
-// Eigenschaften enthält.
-// Nach der Deklaration wird mit den reservierten Wort 
+// Klassendefinition. Die Klasse ist der Bauplan, 
+// der alle relevanten Eigenschaften enthält.
+// Nach der Deklaration wird mit dem reservierten Wort
 // 'new' ein Objekt der Klasse instanziiert.
 
 class Konto{
@@ -53,20 +53,19 @@ const dbVerbindung = mysql.createConnection({
 
 dbVerbindung.connect()
 
-// Die Kontotabelle wird angelegt
+// Die Kontotabelle wird angelegt.
 
 dbVerbindung.connect(function(err){
 
-    dbVerbindung.query("CREATE TABLE IF NOT EXISTS konto(iban VARCHAR(22), kontoart VARCHAR(20), anfangssaldo DECIMAL (15,2), timestamp TIMESTAMP, PRIMARY KEY (iban));",function(err, result){
+    dbVerbindung.query("CREATE TABLE IF NOT EXISTS konto(iban VARCHAR(22), anfangssaldo DECIMAL(15,2), kontoart VARCHAR(20), timestamp TIMESTAMP, PRIMARY KEY(iban));", function(err, result){
         if(err){
-            console.log("Es ist ein Fehler aufgetreten:  " + err)
+            console.log("Es ist ein Fehler aufgetreten: " + err)
         }else{
-            console.log("Tabelle erstellt bzw. schon existent.")
-        }
-        
+            console.log("Tabelle erstellt bzw. schon existent.")    
+        }        
     })
-
 })
+
 
 
 
@@ -171,15 +170,15 @@ app.post('/kontoAnlegen',(req, res, next) => {
     
     if(idKunde){
 
-    // Von der Klasse Konto wird ein Objekt namens konto
-    // instanziiert
+// Von der Klasse Konto wird ein Objekt namens konto 
+// instanziiert.
 
         let konto = new Konto()
-
-        // Nach der Deklaration und der Instanziierung kommt die
-        // Initialisierung. Das heißt, dass konkrete Egenschafts-
-        // werte dem Objekt zugewiesen werden. 
-
+   
+// Nach der Deklaration und der Instanziierung kommt die
+// Initialisierung. Das heißt, dass konkrete Eigenschafts-
+// werte dem Objekt zugewiesen werden.        
+   
         konto.Kontonummer = req.body.kontonummer
         konto.Kontoart = req.body.kontoart
 
@@ -189,18 +188,17 @@ app.post('/kontoAnlegen',(req, res, next) => {
         let errechneteIban = iban.fromBBAN(laenderkennung, bankleitzahl + " " + req.body.kontonummer)
         console.log(errechneteIban)
 
-        // Einfügen von Kontonummer in die Tabelle konto (SQL)
-
+        // Einfügen von kontonummer in die Tabelle konto (SQL)
+       
         dbVerbindung.connect(function(err){
-            dbVerbindung.query("INSERT INTO konto(iban anfangssaldo, kontoart, timestamp) VALUES ( 'DE1233', 2000, 'Sparkonto', 'NOW');", function(err, result){
+
+            dbVerbindung.query("INSERT INTO konto(iban,anfangssaldo,kontoart, timestamp) VALUES ('" + errechneteIban + "', 2000, '" + kontoart + "', NOW());", function(err, result){
                 if(err){
-                    console.log("Es ist ein Fehler aufgetreten:  " + err)
+                    console.log("Es ist ein Fehler aufgetreten: " + err)
                 }else{
-                    console.log("Tabelle erstellt bzw. schon existent.")
-                }
-                
+                    console.log("Tabelle erstellt bzw. schon existent.")    
+                }        
             })
-        
         })
 
         console.log("Kunde ist angemeldet als " + idKunde)
@@ -282,23 +280,46 @@ app.post('/ueberweisen',(req, res, next) => {
     
     if(idKunde){
         console.log("Kunde ist angemeldet als " + idKunde)
-
-        // Das Zielkonto und der Betrag wird aus dem Fortmular entgegengenommen.
+        
+        // Das Zielkonto und der Betrag wird aus dem Formular entgegengenommen.
 
         let zielkontonummer = req.body.zielkontonummer
         let betrag = req.body.betrag
-
-        // ToDO: Saldo um den Betrag reduzieren.
-        // ToDo: Betrag beim Zielkonto gutschreiben.
-
-        // Umsetzung mit einer gemeinsamen Datenbank.
-
-        kunde.Telefonnummer = req.body.telefonnummer
-        kunde.Mail = req.body.mail
-        kunde.Adresse = req.body.adresse
-        kunde.Nachname = "Schmidt"
-        kunde.Kennwort = req.body.kennwort
         
+        /*
+        // Der aktuelle Anfangssaldo wird aus der Datenbank ausgelesen
+
+        dbVerbindung.connect(function(err){
+
+            dbVerbindung.query("SELECT anfangssaldo FROM konto WHERE iban = '" + zielkontonummer + "';", function(err, result){
+                if(err){
+                    console.log("Es ist ein Fehler aufgetreten: " + err)
+                }else{
+                    console.log("Tabelle erstellt bzw. schon existent.")    
+                }        
+            })
+        })
+        */
+
+
+        //ToDo: Saldo um den Betrag reduzieren mit einem SQL-UPDATE.
+
+        dbVerbindung.connect(function(err){
+
+            dbVerbindung.query("UPDATE konto SET anfangssaldo = anfangssaldo + " + betrag + " WHERE iban = '" + zielkontonummer + "' ;", function(err, result){
+                if(err){
+                    console.log("Es ist ein Fehler aufgetreten: " + err)
+                }else{
+                    console.log("Tabelle erstellt bzw. schon existent.")                     
+                }        
+            })
+        })
+
+
+        //ToDo: Betrag beim Zielkonto gutschreiben mit einem SQL-UPDATE.
+
+        // Umsetzung mit einer gemeinsamen relationalen Datenbank.
+
         res.render('ueberweisen.ejs', {                              
             meldung : "Die Überweisung wurde erfolgreich ausgeführt."
         })
