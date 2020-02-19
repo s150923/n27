@@ -5,15 +5,20 @@
 
 class Konto{
     constructor(){
+        this.Iban
         this.Kontonummer
         this.Kontoart
+        this.Anfangssaldo
     }
 }
+
+let konto 
 
 class Kunde{
     constructor(){
         this.Mail
         this.Nachname
+        this.Vorname
         this.Kennwort
         this.IdKunde
         this.Geburtsdatum
@@ -28,10 +33,6 @@ let kunde = new Kunde()
 
 // Initialisierung
 
-kunde.Mail = "zuki@gmail.com"
-kunde.Name = "Zuki"
-kunde.Kennwort = "123"
-kunde.IdKunde = 4711
 const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
@@ -61,13 +62,40 @@ dbVerbindung.connect(function(err){
         if(err){
             console.log("Es ist ein Fehler aufgetreten: " + err)
         }else{
-            console.log("Tabelle erstellt bzw. schon existent.")    
+            console.log("Tabelle konto erstellt bzw. schon existent.")    
         }        
     })
 })
 
+dbVerbindung.connect(function(err){
+
+    dbVerbindung.query("CREATE TABLE IF NOT EXISTS kunde(idkunde INT(11), vorname VARCHAR(45), nachname VARCHAR(45), kennwort VARCHAR(45), mail VARCHAR(45), PRIMARY KEY(idkunde));", function(err, result){
+        if(err){
+            console.log("Es ist ein Fehler aufgetreten: " + err)
+        }else{
+            console.log("Tabelle kunde erstellt bzw. schon existent.")    
+        }        
+    })
+})
+
+kunde.Mail = "s150923@berufskolleg-borken.de"
+kunde.Nachname = "Sekic"
+kunde.Vorname = "Zuki"
+kunde.Kennwort = "1234"
+kunde.IdKunde = 150923
 
 
+dbVerbindung.connect(function(err){
+
+
+    dbVerbindung.query("INSERT INTO kunde(idkunde,vorname,nachname,kennwort,mail) VALUES (" + kunde.IdKunde + ", '" + kunde.Vorname + "', '" + kunde.Nachname + "', '" + kunde.Kennwort + "','" + kunde.Mail + "');", function(err, result){
+        if(err){
+            console.log("Es ist ein Fehler aufgetreten: " + err)
+        }else{
+            console.log("Tabelle erstellt bzw. schon existent.")    
+        }        
+    })            
+})
 
 const server = app.listen(process.env.PORT || 3000, () => {
     console.log('Server lauscht auf Port %s', server.address().port)    
@@ -173,7 +201,7 @@ app.post('/kontoAnlegen',(req, res, next) => {
 // Von der Klasse Konto wird ein Objekt namens konto 
 // instanziiert.
 
-        let konto = new Konto()
+        konto = new Konto()
    
 // Nach der Deklaration und der Instanziierung kommt die
 // Initialisierung. Das heißt, dass konkrete Eigenschafts-
@@ -181,29 +209,31 @@ app.post('/kontoAnlegen',(req, res, next) => {
    
         konto.Kontonummer = req.body.kontonummer
         konto.Kontoart = req.body.kontoart
+        konto.Anfangssaldo = req.body.anfangssaldo
 
         const bankleitzahl = "27000000"
         const laenderkennung = "DE"
 
-        let errechneteIban = iban.fromBBAN(laenderkennung, bankleitzahl + " " + req.body.kontonummer)
-        console.log(errechneteIban)
+        konto.Iban = iban.fromBBAN(laenderkennung, bankleitzahl + " " + req.body.kontonummer)
+        
+        console.log(konto.Iban)
 
         // Einfügen von kontonummer in die Tabelle konto (SQL)
        
         dbVerbindung.connect(function(err){
 
-            dbVerbindung.query("INSERT INTO konto(iban,anfangssaldo,kontoart, timestamp) VALUES ('" + errechneteIban + "', 2000, '" + kontoart + "', NOW());", function(err, result){
+            dbVerbindung.query("INSERT INTO konto(iban,anfangssaldo,kontoart, timestamp) VALUES ('" + konto.Iban + "', " + konto.Anfangssaldo + ", '" + konto.Kontoart + "', NOW());", function(err, result){
                 if(err){
                     console.log("Es ist ein Fehler aufgetreten: " + err)
                 }else{
                     console.log("Tabelle erstellt bzw. schon existent.")    
                 }        
-            })
+            })            
         })
 
         console.log("Kunde ist angemeldet als " + idKunde)
         res.render('kontoAnlegen.ejs', {                              
-           meldung : "Das Konto mit der IBAN " + errechneteIban + " wurde erfolgreich angelegt." 
+           meldung : "Das Konto mit der IBAN " + konto.Iban + " wurde erfolgreich angelegt." 
         })
     }else{
         res.render('login.ejs', {                    
@@ -327,6 +357,33 @@ app.post('/ueberweisen',(req, res, next) => {
         // Die login.ejs wird gerendert 
         // und als Response
         // an den Browser übergeben.
+        res.render('login.ejs', {                    
+        })    
+    }
+})
+
+app.get('/kontoAbfragen',(req, res, next) => {   
+
+    let idKunde = req.cookies['istAngemeldetAls']
+    
+    dbVerbindung.connect(function(err){
+
+        dbVerbindung.query("SELECT anfangssaldo FROM konto WHERE iban = '" + konto.Iban + "';", function(err, result){
+            if(err){
+                console.log("Es ist ein Fehler aufgetreten: " + err)
+            }else{
+                console.log("Kontostand wurde erfolgreich abgefragt. Der Kontostand ist: " + result[0].anfangssaldo)                                     
+            }        
+        })
+    })
+
+
+    if(idKunde){
+        console.log("Kunde ist angemeldet als " + idKunde)
+        res.render('kontoAbfragen.ejs', { 
+            meldung : "Hallo"                             
+        })
+    }else{
         res.render('login.ejs', {                    
         })    
     }
