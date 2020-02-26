@@ -9,6 +9,8 @@ class Konto{
         this.Kontonummer
         this.Kontoart
         this.Anfangssaldo
+        // Die IdKunde ist eine Eigenschaft von Konto.
+        // Jedes Konto wird einem Kunden zugeordnet.
         this.IdKunde
     }
 }
@@ -80,7 +82,7 @@ dbVerbindung.connect(function(err){
 })
 
 kunde.Mail = "s150923@berufskolleg-borken.de"
-kunde.Nachname = "Sekic"
+kunde.Nachname = "S"
 kunde.Vorname = "Zuki"
 kunde.Kennwort = "1234"
 kunde.IdKunde = 150923
