@@ -9,6 +9,7 @@ class Konto{
         this.Kontonummer
         this.Kontoart
         this.Anfangssaldo
+        this.IdKunde
     }
 }
 
@@ -58,7 +59,7 @@ dbVerbindung.connect()
 
 dbVerbindung.connect(function(err){
 
-    dbVerbindung.query("CREATE TABLE IF NOT EXISTS konto(iban VARCHAR(22), anfangssaldo DECIMAL(15,2), kontoart VARCHAR(20), timestamp TIMESTAMP, PRIMARY KEY(iban));", function(err, result){
+    dbVerbindung.query("CREATE TABLE IF NOT EXISTS konto(iban VARCHAR(22), idkunde INT(11), anfangssaldo DECIMAL(15,2), kontoart VARCHAR(20), timestamp TIMESTAMP, PRIMARY KEY(iban));", function(err, result){
         if(err){
             console.log("Es ist ein Fehler aufgetreten: " + err)
         }else{
@@ -210,6 +211,7 @@ app.post('/kontoAnlegen',(req, res, next) => {
         konto.Kontonummer = req.body.kontonummer
         konto.Kontoart = req.body.kontoart
         konto.Anfangssaldo = req.body.anfangssaldo
+        konto.IdKunde = req.body.idKunde
 
         const bankleitzahl = "27000000"
         const laenderkennung = "DE"
@@ -222,7 +224,7 @@ app.post('/kontoAnlegen',(req, res, next) => {
        
         dbVerbindung.connect(function(err){
 
-            dbVerbindung.query("INSERT INTO konto(iban,anfangssaldo,kontoart, timestamp) VALUES ('" + konto.Iban + "', " + konto.Anfangssaldo + ", '" + konto.Kontoart + "', NOW());", function(err, result){
+            dbVerbindung.query("INSERT INTO konto(iban, idkunde, anfangssaldo, kontoart, timestamp) VALUES ('" + konto.Iban + "', '" + konto.IdKunde + "',  " + konto.Anfangssaldo + ", '" + konto.Kontoart + "', NOW());", function(err, result){
                 if(err){
                     console.log("Es ist ein Fehler aufgetreten: " + err)
                 }else{
@@ -368,7 +370,7 @@ app.get('/kontoAbfragen',(req, res, next) => {
     
     dbVerbindung.connect(function(err){
 
-        dbVerbindung.query("SELECT anfangssaldo FROM konto WHERE iban = '" + konto.Iban + "';", function(err, result){
+        dbVerbindung.query("SELECT anfangssaldo FROM konto WHERE idKunde = '" + konto.IdKunde + "';", function(err, result){
             if(err){
                 console.log("Es ist ein Fehler aufgetreten: " + err)
             }else{
