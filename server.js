@@ -213,7 +213,7 @@ app.post('/kontoAnlegen',(req, res, next) => {
         konto.Kontonummer = req.body.kontonummer
         konto.Kontoart = req.body.kontoart
         konto.Anfangssaldo = req.body.anfangssaldo
-        konto.IdKunde = req.body.idKunde
+        konto.IdKunde = idKunde 
 
         const bankleitzahl = "27000000"
         const laenderkennung = "DE"
@@ -226,9 +226,9 @@ app.post('/kontoAnlegen',(req, res, next) => {
        
         dbVerbindung.connect(function(err){
 
-            dbVerbindung.query("INSERT INTO konto(iban, idkunde, anfangssaldo, kontoart, timestamp) VALUES ('" + konto.Iban + "', '" + konto.IdKunde + "',  " + konto.Anfangssaldo + ", '" + konto.Kontoart + "', NOW());", function(err, result){
+            dbVerbindung.query("INSERT INTO konto(iban, idkunde, anfangssaldo, kontoart, timestamp) VALUES ('" + konto.Iban + "', " + konto.IdKunde + ",  " + konto.Anfangssaldo + ", '" + konto.Kontoart + "', NOW());", function(err, result){
                 if(err){
-                    console.log("Es ist ein Fehler aufgetreten: " + err)
+                    console.log("Fehler beim Anlegen des Kontos: " + err)
                 }else{
                     console.log("Tabelle erstellt bzw. schon existent.")    
                 }        
